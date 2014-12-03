@@ -8,9 +8,7 @@
 " Note:   This plugin requires +conceal
 "
 " GetLatestVimScripts: 302 1 :AutoInstall: AnsiEsc.vim
-"redraw!|call DechoSep()|call inputsave()|call input("Press <cr> to continue")|call inputrestore()
 " ---------------------------------------------------------------------
-"DechoTabOn
 "  Load Once: {{{1
 if exists("g:loaded_AnsiEsc")
  finish
@@ -28,12 +26,9 @@ set cpo&vim
 " ---------------------------------------------------------------------
 " AnsiEsc#AnsiEsc: toggles ansi-escape code visualization {{{2
 fun! AnsiEsc#AnsiEsc(rebuild)
-"  call Dfunc("AnsiEsc#AnsiEsc(rebuild=".a:rebuild.")")
   if a:rebuild
-"   call Decho("rebuilding AnsiEsc tables")
    call AnsiEsc#AnsiEsc(0)
    call AnsiEsc#AnsiEsc(0)
-"   call Dret("AnsiEsc#AnsiEsc")
    return
   endif
   let bn= bufnr("%")
@@ -42,7 +37,6 @@ fun! AnsiEsc#AnsiEsc(rebuild)
   endif
   if s:AnsiEsc_enabled_{bn}
    " disable AnsiEsc highlighting
-"   call Decho("disable AnsiEsc highlighting: s:AnsiEsc_ft_".bn."<".s:AnsiEsc_ft_{bn}."> bn#".bn)
    if exists("g:colors_name")|let colorname= g:colors_name|endif
    if exists("s:conckeep_{bufnr('%')}")|let &l:conc= s:conckeep_{bufnr('%')}|unlet s:conckeep_{bufnr('%')}|endif
    if exists("s:colekeep_{bufnr('%')}")|let &l:cole= s:colekeep_{bufnr('%')}|unlet s:colekeep_{bufnr('%')}|endif
@@ -54,27 +48,11 @@ fun! AnsiEsc#AnsiEsc(rebuild)
    exe "set ft=".s:AnsiEsc_ft_{bn}
    if exists("colorname")|exe "colors ".colorname|endif
    let s:AnsiEsc_enabled_{bn}= 0
-   if !exists('g:no_drchip_menu') && !exists('g:no_ansiesc_menu')
-    if has("gui_running") && has("menu") && &go =~# 'm'
-     " menu support
-     exe 'silent! unmenu '.g:DrChipTopLvlMenu.'AnsiEsc'
-     exe 'menu '.g:DrChipTopLvlMenu.'AnsiEsc.Start<tab>:AnsiEsc		:AnsiEsc<cr>'
-    endif
-   endif
    let &l:hl= s:hlkeep_{bufnr("%")}
-"   call Dret("AnsiEsc#AnsiEsc")
    return
   else
    let s:AnsiEsc_ft_{bn}      = &ft
    let s:AnsiEsc_enabled_{bn} = 1
-"   call Decho("enable AnsiEsc highlighting: s:AnsiEsc_ft_".bn."<".s:AnsiEsc_ft_{bn}."> bn#".bn)
-   if !exists('g:no_drchip_menu') && !exists('g:no_ansiesc_menu')
-    if has("gui_running") && has("menu") && &go =~# 'm'
-     " menu support
-     exe 'silent! unmenu '.g:DrChipTopLvlMenu.'AnsiEsc'
-     exe 'menu '.g:DrChipTopLvlMenu.'AnsiEsc.Stop<tab>:AnsiEsc		:AnsiEsc<cr>'
-    endif
-   endif
 
    " -----------------
    "  Conceal Support: {{{2
@@ -84,14 +62,12 @@ fun! AnsiEsc#AnsiEsc(rebuild)
      if &l:conc != 3
       let s:conckeep_{bufnr('%')}= &cole
       setlocal conc=3
-"      call Decho("l:conc=".&l:conc)
      endif
     else
      if &l:cole != 3 || &l:cocu != "nv"
       let s:colekeep_{bufnr('%')}= &l:cole
       let s:cocukeep_{bufnr('%')}= &l:cocu
       setlocal cole=3 cocu=nv
-"      call Decho("l:cole=".&l:cole." l:cocu=".&l:cocu)
      endif
     endif
    endif
@@ -216,7 +192,6 @@ fun! AnsiEsc#AnsiEsc(rebuild)
 
   if v:version >= 703
    " handles implicit background highlighting
-"   call Decho("installing implicit background highlighting")
 
    syn cluster AnsiBlackBgGroup contains=ansiFgBlackBlack,ansiFgRedBlack,ansiFgGreenBlack,ansiFgYellowBlack,ansiFgBlueBlack,ansiFgMagentaBlack,ansiFgCyanBlack,ansiFgWhiteBlack
    syn region ansiBlackBg	start="\e\[;\=0\{0,2};\=\%(1;\)\=40\%(1;\)\=m" end="\e\[[04]"me=e-3  contains=ansiConceal,@ansiBlackBgGroup
@@ -514,7 +489,6 @@ fun! AnsiEsc#AnsiEsc(rebuild)
    " ---------------------
    " eight-color handling: {{{3
    " ---------------------
-"   call Decho("set up 8-color highlighting groups")
    hi ansiBlack             ctermfg=black      guifg=black                                        cterm=none         gui=none
    hi ansiRed               ctermfg=red        guifg=red                                          cterm=none         gui=none
    hi ansiGreen             ctermfg=green      guifg=green                                        cterm=none         gui=none
@@ -679,16 +653,13 @@ fun! AnsiEsc#AnsiEsc(rebuild)
     " ---------------------------
     " handle 256-color terminals: {{{3
     " ---------------------------
-"    call Decho("set up 256-color highlighting groups")
     let icolor= 1
     while icolor < 256
      let jcolor= 1
      exe "hi ansiHL_".icolor."_0 ctermfg=".icolor
      exe "hi ansiHL_0_".icolor." ctermbg=".icolor
-"     call Decho("exe hi ansiHL_".icolor." ctermfg=".icolor)
      while jcolor < 256
       exe "hi ansiHL_".icolor."_".jcolor." ctermfg=".icolor." ctermbg=".jcolor
-"      call Decho("exe hi ansiHL_".icolor."_".jcolor." ctermfg=".icolor." ctermbg=".jcolor)
       let jcolor= jcolor + 1
      endwhile
      let icolor= icolor + 1
@@ -699,7 +670,6 @@ fun! AnsiEsc#AnsiEsc(rebuild)
    " ----------------------------------
    " not 8 or 256 color terminals (gui): {{{3
    " ----------------------------------
-"   call Decho("set up gui highlighting groups")
    hi ansiBlack             ctermfg=black      guifg=black                                        cterm=none         gui=none
    hi ansiRed               ctermfg=red        guifg=red                                          cterm=none         gui=none
    hi ansiGreen             ctermfg=green      guifg=green                                        cterm=none         gui=none
@@ -861,13 +831,11 @@ fun! AnsiEsc#AnsiEsc(rebuild)
    hi ansiCyanWhite         ctermfg=cyan       ctermbg=white      guifg=Cyan       guibg=White    cterm=none         gui=none
    hi ansiWhiteWhite        ctermfg=white      ctermbg=white      guifg=White      guibg=White    cterm=none         gui=none
   endif
-"  call Dret("AnsiEsc#AnsiEsc")
 endfun
 
 " ---------------------------------------------------------------------
 " s:MultiElementHandler: builds custom syntax highlighting for three or more element ansi escape sequences {{{2
 fun! s:MultiElementHandler()
-"  call Dfunc("s:MultiElementHandler()")
   let curwp= SaveWinPosn(0)
   keepj 1
   keepj norm! 0
@@ -879,7 +847,6 @@ fun! s:MultiElementHandler()
    let mcol    = col(".")
    let ansiesc = strpart(getline("."),curcol,mcol - curcol)
    let aecodes = split(ansiesc,'[;m]')
-"   call Decho("ansiesc<".ansiesc."> aecodes=".string(aecodes))
    let skip         = 0
    let mod          = "NONE,"
    let fg           = ""
@@ -895,7 +862,6 @@ fun! s:MultiElementHandler()
      if skip == 38 && code == 5
       " handling <esc>[38;5
       let skip= 385
-"      call Decho(" 1: building code=".code." skip=".skip.": mod<".mod."> fg<".fg."> bg<".bg.">")
       continue
      elseif skip == 385
       " handling <esc>[38;5;...
@@ -905,13 +871,11 @@ fun! s:MultiElementHandler()
        let fg= code
       endif
       let skip= 0
-"      call Decho(" 2: building code=".code." skip=".skip.": mod<".mod."> fg<".fg."> bg<".bg.">")
       continue
 
      elseif skip == 48 && code == 5
       " handling <esc>[48;5
       let skip= 485
-"      call Decho(" 3: building code=".code." skip=".skip.": mod<".mod."> fg<".fg."> bg<".bg.">")
       continue
      elseif skip == 485
       " handling <esc>[48;5;...
@@ -921,7 +885,6 @@ fun! s:MultiElementHandler()
        let bg= code
       endif
       let skip= 0
-"      call Decho(" 4: building code=".code." skip=".skip.": mod<".mod."> fg<".fg."> bg<".bg.">")
       continue
 
      else
@@ -983,7 +946,6 @@ fun! s:MultiElementHandler()
       let skip= 48
      endif
 
-"     call Decho(" 5: building code=".code." skip=".skip.": mod<".mod."> fg<".fg."> bg<".bg.">")
     endfor
 
     " fixups
@@ -995,7 +957,6 @@ fun! s:MultiElementHandler()
     let synrule = synrule.' start="\e\['.ansiesc.'"'
     let synrule = synrule.' end="\e\["me=e-2'
     let synrule = synrule." contains=ansiConceal"
-"    call Decho(" exe synrule: ".synrule)
     exe synrule
 
     " build highlighting rule
@@ -1009,14 +970,12 @@ fun! s:MultiElementHandler()
      if fg != ""| let hirule=hirule." ctermfg=".fg| endif
      if bg != ""| let hirule=hirule." ctermbg=".bg| endif
     endif
-"    call Decho(" exe hirule: ".hirule)
     exe hirule
    endif
 
   endwhile
 
   call RestoreWinPosn(curwp)
-"  call Dret("s:MultiElementHandler")
 endfun
 
 " ---------------------------------------------------------------------
@@ -1026,7 +985,6 @@ endfun
 "           colors  16-231:  6x6x6 color cube, code= 16+r*36+g*6+b  with r,g,b each in [0,5]
 "           colors 232-255:  grayscale ramp,   code= 10*gray + 8    with gray in [0,23] (black,white left out)
 fun! s:Ansi2Gui(code)
-"  call Dfunc("s:Ansi2Gui(code=)".a:code)
   let guicolor= a:code
   if a:code < 16
    let code2rgb = [ "black", "red3", "green3", "yellow3", "blue3", "magenta3", "cyan3", "gray70", "gray40", "red", "green", "yellow", "royalblue3", "magenta", "cyan", "white"]
@@ -1043,7 +1001,6 @@ fun! s:Ansi2Gui(code)
    let b        = code2rgb[code%6]
    let guicolor = printf("#%02x%02x%02x",r,g,b)
   endif
-"  call Dret("s:Ansi2Gui ".guicolor)
   return guicolor
 endfun
 
