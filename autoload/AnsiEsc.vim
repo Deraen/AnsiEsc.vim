@@ -32,10 +32,10 @@ fun! AnsiEsc#AnsiEsc(rebuild)
    return
   endif
   let bn= bufnr("%")
-  if !exists("s:AnsiEsc_enabled_{bn}")
-   let s:AnsiEsc_enabled_{bn}= 0
+  if !exists("g:AnsiEsc_enabled_{bn}")
+   let g:AnsiEsc_enabled_{bn}= 0
   endif
-  if s:AnsiEsc_enabled_{bn}
+  if g:AnsiEsc_enabled_{bn}
    " disable AnsiEsc highlighting
    if exists("g:colors_name")|let colorname= g:colors_name|endif
    if exists("s:conckeep_{bufnr('%')}")|let &l:conc= s:conckeep_{bufnr('%')}|unlet s:conckeep_{bufnr('%')}|endif
@@ -47,12 +47,12 @@ fun! AnsiEsc#AnsiEsc(rebuild)
    syn reset
    exe "set ft=".s:AnsiEsc_ft_{bn}
    if exists("colorname")|exe "colors ".colorname|endif
-   let s:AnsiEsc_enabled_{bn}= 0
+   let g:AnsiEsc_enabled_{bn}= 0
    let &l:hl= s:hlkeep_{bufnr("%")}
    return
   else
    let s:AnsiEsc_ft_{bn}      = &ft
-   let s:AnsiEsc_enabled_{bn} = 1
+   let g:AnsiEsc_enabled_{bn} = 1
 
    " -----------------
    "  Conceal Support: {{{2
@@ -836,7 +836,7 @@ endfun
 " ---------------------------------------------------------------------
 " s:MultiElementHandler: builds custom syntax highlighting for three or more element ansi escape sequences {{{2
 fun! s:MultiElementHandler()
-  let curwp= SaveWinPosn(0)
+  " let curwp= SaveWinPosn(0)
   keepj 1
   keepj norm! 0
   let mehcnt = 0
@@ -975,7 +975,7 @@ fun! s:MultiElementHandler()
 
   endwhile
 
-  call RestoreWinPosn(curwp)
+  " call RestoreWinPosn(curwp)
 endfun
 
 " ---------------------------------------------------------------------
